@@ -1,0 +1,2 @@
+# Test random string generation and interpolation.
+Ignore = [".databricks"]

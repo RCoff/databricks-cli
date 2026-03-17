@@ -1,0 +1,15 @@
+bundle:
+  name: random-string-test
+
+random_strings:
+  suffix:
+    length: 8
+    special: false
+    upper: false
+    numeric: true
+    lower: true
+
+resources:
+  jobs:
+    my_job:
+      name: "test-job-${random_string.suffix}"

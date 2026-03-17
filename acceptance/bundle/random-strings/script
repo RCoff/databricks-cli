@@ -1,0 +1,20 @@
+# Test that random strings are generated and interpolated into resource names.
+name=$($CLI bundle validate -o json | jq -r .resources.jobs.my_job.name)
+
+# Extract the suffix (everything after "test-job-") and register a replacement.
+suffix=${name#test-job-}
+add_repl.py "$suffix" SUFFIX
+
+# Verify the name has the expected prefix and an 8-char lowercase alphanumeric suffix.
+echo "$name" | grep -E '^test-job-[a-z0-9]{8}$'
+
+# Run again and verify the same value is reused (persistence).
+name2=$($CLI bundle validate -o json | jq -r .resources.jobs.my_job.name)
+echo "$name2" | grep -E '^test-job-[a-z0-9]{8}$'
+
+# Verify both runs produced the same value.
+if [ "$name" = "$name2" ]; then
+  echo "Random string is stable across runs"
+else
+  echo "FAIL: random string changed between runs: $name vs $name2"
+fi
