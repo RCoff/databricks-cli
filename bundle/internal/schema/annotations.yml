@@ -156,6 +156,37 @@ github.com/databricks/cli/bundle/config.Python:
 
       If enabled, Python code will execute within this environment. If disabled,
       it defaults to using the Python interpreter available in the current shell.
+github.com/databricks/cli/bundle/config.RandomString:
+  "length":
+    "description": |-
+      Length of the random string to generate.
+  "lower":
+    "description": |-
+      Whether to include lowercase letters. Default: true.
+  "min_lower":
+    "description": |-
+      Minimum number of lowercase letters in the result.
+  "min_numeric":
+    "description": |-
+      Minimum number of numeric digits in the result.
+  "min_special":
+    "description": |-
+      Minimum number of special characters in the result.
+  "min_upper":
+    "description": |-
+      Minimum number of uppercase letters in the result.
+  "numeric":
+    "description": |-
+      Whether to include numeric digits. Default: true.
+  "override_special":
+    "description": |-
+      Custom set of special characters to use instead of the default.
+  "special":
+    "description": |-
+      Whether to include special characters. Default: true.
+  "upper":
+    "description": |-
+      Whether to include uppercase letters. Default: true.
 github.com/databricks/cli/bundle/config.Resources:
   "alerts":
     "description": |-
@@ -313,6 +344,9 @@ github.com/databricks/cli/bundle/config.Root:
   "python":
     "description": |-
       PLACEHOLDER
+  "random_strings":
+    "description": |-
+      Defines random strings that are generated once and persisted across deployments.
   "resources":
     "description": |-
       A Map that defines the resources for the bundle, where each key is the name of the resource, and the value is a Map that defines the resource.

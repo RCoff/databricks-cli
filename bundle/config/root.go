@@ -32,6 +32,10 @@ type Root struct {
 	// Contains user defined variables
 	Variables map[string]*variable.Variable `json:"variables,omitempty"`
 
+	// RandomStrings defines random strings that are generated once and
+	// persisted across deployments. Reference via ${random_string.<name>}.
+	RandomStrings map[string]RandomString `json:"random_strings,omitempty"`
+
 	// Bundle contains details about this bundle, such as its name,
 	// version of the spec (TODO), default cluster, default warehouse, etc.
 	Bundle Bundle `json:"bundle,omitempty"`
@@ -329,6 +333,7 @@ func (r *Root) MergeTargetOverrides(name string) error {
 		"workspace",
 		"artifacts",
 		"resources",
+		"random_strings",
 		"sync",
 		"permissions",
 		"presets",

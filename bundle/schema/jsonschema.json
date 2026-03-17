@@ -2391,6 +2391,63 @@
                 }
               ]
             },
+            "config.RandomString": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "length": {
+                      "description": "Length of the random string to generate.",
+                      "$ref": "#/$defs/int"
+                    },
+                    "lower": {
+                      "description": "Whether to include lowercase letters. Default: true.",
+                      "$ref": "#/$defs/bool"
+                    },
+                    "min_lower": {
+                      "description": "Minimum number of lowercase letters in the result.",
+                      "$ref": "#/$defs/int"
+                    },
+                    "min_numeric": {
+                      "description": "Minimum number of numeric digits in the result.",
+                      "$ref": "#/$defs/int"
+                    },
+                    "min_special": {
+                      "description": "Minimum number of special characters in the result.",
+                      "$ref": "#/$defs/int"
+                    },
+                    "min_upper": {
+                      "description": "Minimum number of uppercase letters in the result.",
+                      "$ref": "#/$defs/int"
+                    },
+                    "numeric": {
+                      "description": "Whether to include numeric digits. Default: true.",
+                      "$ref": "#/$defs/bool"
+                    },
+                    "override_special": {
+                      "description": "Custom set of special characters to use instead of the default.",
+                      "$ref": "#/$defs/string"
+                    },
+                    "special": {
+                      "description": "Whether to include special characters. Default: true.",
+                      "$ref": "#/$defs/bool"
+                    },
+                    "upper": {
+                      "description": "Whether to include uppercase letters. Default: true.",
+                      "$ref": "#/$defs/bool"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "length"
+                  ]
+                },
+                {
+                  "type": "string",
+                  "pattern": "\\$\\{(var(\\.[a-zA-Z]+([-_]?[a-zA-Z0-9]+)*(\\[[0-9]+\\])*)+)\\}"
+                }
+              ]
+            },
             "config.Resources": {
               "oneOf": [
                 {
@@ -10913,6 +10970,20 @@
                   }
                 ]
               },
+              "config.RandomString": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": {
+                      "$ref": "#/$defs/github.com/databricks/cli/bundle/config.RandomString"
+                    }
+                  },
+                  {
+                    "type": "string",
+                    "pattern": "\\$\\{(var(\\.[a-zA-Z]+([-_]?[a-zA-Z0-9]+)*(\\[[0-9]+\\])*)+)\\}"
+                  }
+                ]
+              },
               "config.Script": {
                 "oneOf": [
                   {
@@ -11746,6 +11817,10 @@
     },
     "python": {
       "$ref": "#/$defs/github.com/databricks/cli/bundle/config.Python"
+    },
+    "random_strings": {
+      "description": "Defines random strings that are generated once and persisted across deployments.",
+      "$ref": "#/$defs/map/github.com/databricks/cli/bundle/config.RandomString"
     },
     "resources": {
       "description": "A Map that defines the resources for the bundle, where each key is the name of the resource, and the value is a Map that defines the resource.",

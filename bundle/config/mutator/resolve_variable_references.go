@@ -41,6 +41,7 @@ var defaultPrefixes = []string{
 	"bundle",
 	"workspace",
 	"variables",
+	"random_strings",
 }
 
 var artifactPath = dyn.MustPathFromString("artifacts")
@@ -147,14 +148,16 @@ func (m *resolveVariableReferences) Apply(ctx context.Context, b *bundle.Bundle)
 	}
 
 	// The path ${var.foo} is a shorthand for ${variables.foo.value}.
-	// We rewrite it here to make the resolution logic simpler.
+	// The path ${random_string.foo} is a shorthand for ${random_strings.foo.value}.
+	// We rewrite them here to make the resolution logic simpler.
 	varPath := dyn.NewPath(dyn.Key("var"))
+	randomStringPath := dyn.NewPath(dyn.Key("random_string"))
 
 	var diags diag.Diagnostics
 	maxRounds := 1 + m.extraRounds
 
 	for round := range maxRounds {
-		hasUpdates, newDiags := m.resolveOnce(b, prefixes, varPath)
+		hasUpdates, newDiags := m.resolveOnce(b, prefixes, varPath, randomStringPath)
 
 		diags = diags.Extend(newDiags)
 
@@ -183,7 +186,7 @@ func (m *resolveVariableReferences) Apply(ctx context.Context, b *bundle.Bundle)
 	return diags
 }
 
-func (m *resolveVariableReferences) resolveOnce(b *bundle.Bundle, prefixes []dyn.Path, varPath dyn.Path) (bool, diag.Diagnostics) {
+func (m *resolveVariableReferences) resolveOnce(b *bundle.Bundle, prefixes []dyn.Path, varPath, randomStringPath dyn.Path) (bool, diag.Diagnostics) {
 	var diags diag.Diagnostics
 	hasUpdates := false
 	err := m.selectivelyMutate(b, func(root dyn.Value) (dyn.Value, error) {
@@ -219,6 +222,15 @@ func (m *resolveVariableReferences) resolveOnce(b *bundle.Bundle, prefixes []dyn
 					}
 
 					path = newPath
+				}
+
+				// Rewrite the shorthand path ${random_string.foo} into ${random_strings.foo.value}.
+				if path.HasPrefix(randomStringPath) {
+					path = dyn.NewPath(
+						dyn.Key("random_strings"),
+						path[1],
+						dyn.Key("value"),
+					)
 				}
 
 				// If the path starts with "artifacts", we need to add a metric to track if this reference is used.

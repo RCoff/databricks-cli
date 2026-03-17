@@ -95,6 +95,11 @@ func Initialize(ctx context.Context, b *bundle.Bundle) {
 		// searches for strings with variable references in them.
 		mutator.RewriteWorkspacePrefix(),
 
+		// Reads (typed): b.Config.RandomStrings (checks for random string definitions)
+		// Updates (typed): b.Config.RandomStrings.*.Value (generates or loads persisted random string values)
+		// Updates (dynamic): random_strings.*.value (sets generated values for interpolation)
+		mutator.GenerateRandomStrings(),
+
 		// Reads (dynamic): variables.* (checks if there's a value assigned to variable already or if it has lookup reference)
 		// Updates (dynamic): variables.*.value (sets values from environment variables, variable files, or defaults)
 		// Resolves and sets values for bundle variables in the following order: from environment variables, from variable files and then defaults
